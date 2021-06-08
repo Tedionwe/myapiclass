@@ -1,37 +1,54 @@
 
 
 
-export default class User{
-     name ="";
-    email ="";
-    pwd="";
-   private _isVerified = false;
-  private  _lastLogin = "";
 
 
+export default class User {
 
-  constructor(name:string,email:string,password:string){
-    this.name =name;
-    this.email =email;
-    this.pwd = password;
-    this._isVerified = false;
-    this._lastLogin = new Date().toDateString()
-  }
+    name = "";
+    email = "";
+    pwd = "";
+    private _isVerified = false;
+    private _lastLogin = "";
 
-  get isVerified(){
-      return  this._isVerified
-  }
 
-  get lastLogin(){
-      return this._lastLogin;
-  }
+    constructor(name: string, email: string, password: string) {
+        this.name = name;
+        this.email = email;
+        this.pwd = password;
+        this._isVerified = false;
+        this._lastLogin = new Date().toDateString()
+    }
 
-  set isVerified(arg:boolean){
-      this._isVerified = arg;
-  }
+    get isVerified(){
+        return this._isVerified
+    }
 
-  set lastLogin(date:string){
-      this._lastLogin =date;
-  }
+    get lastLogin(){
+        return this._lastLogin;
+    }
 
+
+    set isVerified(arg:boolean){
+        this._isVerified = arg;
+    }
+
+    set lastLogin(date:string){
+        this._lastLogin = date;
+    }
+
+    get toJson() {
+        return {
+            name: this.name,
+            email: this.email,
+            password: "****",
+            isVerified: this.isVerified ,
+            lastLogin: this.lastLogin
+        }
+    }
+
+    
 }
+
+
+

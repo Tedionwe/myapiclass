@@ -7,9 +7,7 @@ var user_1 = __importDefault(require("./user"));
 var Auth = /** @class */ (function () {
     function Auth() {
         this.users = [];
-        var user1 = new user_1.default("sarah", "sarah@yahoo.com", "123456");
-        var user2 = new user_1.default("paul", "paul@outlook.com", "password");
-        this.users = [user1, user2];
+        this.users = [];
     }
     Auth.prototype.login = function (email, pwd) {
         var user = this.users.find(function (e) {
@@ -17,19 +15,37 @@ var Auth = /** @class */ (function () {
             return isMatch;
         });
         if (!user)
-            throw new Error("invalid Password or User");
+            throw new Error("invalid email or password");
         user.lastLogin = new Date().toDateString();
-        return user.name + "welcome back !";
+        return user.name + " welcome back !";
     };
-    Auth.prototype.register = function (email, pwd, name, _isVerified, _lastLogin) {
-        var user = this.users.find(function (e) {
-            var isMatch = e.email === email && e.pwd === pwd && e.name === name;
-            return isMatch;
-        });
+    Auth.prototype.register = function (name, email, pwd) {
+        var user = new user_1.default(name, email, pwd);
+        this.users.push(user);
+        return user.toJson;
+    };
+    Auth.prototype.listOfUser = function () {
+        // const listOfUser = [];
+        // for (let user of this.users){
+        //     listOfUser.push(user.toJson)
+        // }
+        // return listOfUsers
+        return this.users.map(function (user) { return user.toJson; });
+    };
+    Auth.prototype.getUserByEmail = function (email) {
+        var user = this.users.find(function (user) { return user.email.toLowerCase() === email.toLowerCase(); });
         if (!user)
-            throw new Error("invalid Password or User");
-        user.lastLogin = new Date().toDateString();
-        return user.name + "welcome back !";
+            throw "No matching user found";
+        return user.toJson;
+    };
+    Auth.prototype.isEmailVerified = function (email, isVerified) {
+        var user = this.users.find(function (user) { return user.email.toLowerCase() === email.toLowerCase(); });
+        if (!user)
+            throw "No matching user found";
+        if (isVerified !== true && isVerified !== false)
+            throw "verification failed";
+        user.isVerified = Boolean(isVerified);
+        return user.toJson;
     };
     return Auth;
 }());

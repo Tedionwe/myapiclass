@@ -1,58 +1,83 @@
-import User from "./user"
+import User from "./user";
 
 
 
+export default class Auth {
 
 
+    users: Array<User> = []
+
+    constructor() {
+
+        this.users = []
+    }
 
 
-export default class Auth{
-  
-   users: Array<User> =[]
- 
+    login(email:string,pwd:string) {
+
+        const user = this.users.find((e)=>{
+            const isMatch = e.email === email && e.pwd ===pwd;
+            return isMatch
+        });
+
+        if(!user) throw new Error("invalid email or password")
+
+        user.lastLogin = new Date().toDateString();
+
+        return user.name + " welcome back !";
+    }
 
 
-  constructor(){
-   const user1 =new User("sarah", "sarah@yahoo.com","123456");
-   const user2 =new User("paul", "paul@outlook.com","password");
-   
+    register(name: string, email: string, pwd: string) {
 
-    this.users =[user1,user2]
-  }
+        const user = new User(name, email, pwd);
 
-  login(email:string,pwd:string){
+        this.users.push(user);
 
+        return user.toJson
+    }
 
-    const user = this.users.find((e)=>{
-        const isMatch= e.email === email && e.pwd ===pwd;
-        return isMatch
-    });
+    listOfUser() {
 
-    if(!user) throw new Error("invalid Password or User");
+        // const listOfUser = [];
 
-    user.lastLogin = new Date().toDateString();
+        // for (let user of this.users){
+        //     listOfUser.push(user.toJson)
+        // }
 
-    return user.name +  "welcome back !";
+        // return listOfUsers
 
+        return this.users.map((user) => user.toJson);
+    }
 
-  }
+    getUserByEmail(email: string) {
 
+        const user = this.users.find((user) => user.email.toLowerCase() === email.toLowerCase());
 
-  register(email:string,pwd:string, name:string, _isVerified : boolean, _lastLogin :string){
+        if (!user) throw "No matching user found";
 
-
-    const user = this.users.find((e)=>{
-        const isMatch= e.email === email && e.pwd ===pwd && e.name ===name;
-        return isMatch
-    });
-
-    if(!user) throw new Error("invalid Password or User");
-
-    user.lastLogin = new Date().toDateString();
-
-    return user.name +  "welcome back !";
+        return user.toJson;
+    }
 
 
-  }
+    isEmailVerified(email: string, isVerified: boolean){
+       
+      const user = this.users.find((user) => user.email.toLowerCase() === email.toLowerCase());
+
+      if (!user) throw "No matching user found";
+
+      if (isVerified !==true && isVerified !==false) throw "verification failed"
+
+      user.isVerified = Boolean(isVerified)
+
+      return user.toJson;
+     }
 
 }
+
+    
+
+
+
+
+
